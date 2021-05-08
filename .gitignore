@@ -1,7 +1,7 @@
 node_modules
 build
 npm-debug.log
-.env
+*.env
 .DS_Store
 
 # Add env files after initial empty commit
