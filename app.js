@@ -3,10 +3,11 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bodyParser = require('body-parser');
 
 var homeRouter = require('./routes/home');
 var usersRouter = require('./routes/users');
-var apiRouter = require('./routes/api');
+var apiRouter = require('./routes/api-v1');
 
 var app = express();
 
@@ -20,10 +21,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+ 
+// parse application/json
+app.use(bodyParser.json())
+
+// Routes
 app.use('/', homeRouter);
 app.use('/home', homeRouter);
 app.use('/users', usersRouter);
-app.use('/api', apiRouter);
+app.use('/api/v1', apiRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
