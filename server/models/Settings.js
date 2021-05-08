@@ -32,39 +32,42 @@ async function getAllSettings() {
  * @returns {Object}    An object with the setting asked for.
  */
 async function getSettingByKey(key) {
-    const result = await pool.query(
-        "SELECT value FROM settings WHERE key = ?", [key]
-    );
-    return result[0].length < 1 ? {} : result[0];
+  console.log(key);
+  const result = await pool.query(
+      "SELECT value FROM settings WHERE `key` = ?", [key]
+  );
+  console.log(result);
+  return result[0].length < 1 ? {} : result[0];
 }
 
 async function createSetting(key, value) {
-    const result = await pool.query(
-      "INSERT INTO settings SET key = ?, value = ?",
-      [key, value]
+  const result = await pool.query(
+    "INSERT INTO settings SET `key` = ?, `value` = ?",
+    [key, value]
+  );
+  if (result[0].length < 1) {
+    throw new Error(
+      `Failed to create a new setting ${key}, ${value}`
     );
-    if (result[0].length < 1) {
-      throw new Error(
-        `Failed to create a new setting ${key}, ${value}`
-      );
-    }
-    return getSettingByKey(key);
+  }
+  return getSettingByKey(key);
 }
 
-  async function updateSetting(key, value) {
-    const result = await pool.query(
-      "UPDATE settings SET value = ? WHERE key = ?",
-      [value, key]
-    );
-    if (result[0].affectedRows < 1) {
-      throw new Error(`User with id ${key} does not exist`);
-    }
-    return getSettingByKey(key);
+async function updateSetting(key, value) {
+  const result = await pool.query(
+    "UPDATE settings SET value = ? WHERE `key` = ?",
+    [value, key]
+  );
+  if (result[0].affectedRows < 1) {
+    throw new Error(`User with id ${key} does not exist`);
+  }
+  return getSettingByKey(key);
 }
 
 module.exports = {
-    getAllSettings,
-    getSettingByKey,
-    createSetting,
-    updateSetting
+  getAllSettings,
+  getSettingByKey,
+  createSetting,
+  updateSetting
 };
+

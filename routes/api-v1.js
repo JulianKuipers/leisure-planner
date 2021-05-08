@@ -10,9 +10,10 @@ router.get('/', function(req, res, next) {
 /* GET api routes regarding settings */
 router.get('/settings/:key', function(req, res, next) {
   if (req.params.hasOwnProperty("key") && typeof(req.params.key) === 'string') {
+    console.info("Request passed");
     next();
   } else {
-    console.log("Request is invalid! Setting is not found!");
+    console.error("Request is invalid! Setting is not found!");
     res.status(400).send({ error: "Setting not found" });
   }
 });
@@ -26,10 +27,10 @@ router.route('/settings/:key')
       .catch(error => res.status(404).send({ error: error.message }));
   })
   .put(function(req, res) {
-    let key = parseInt(req.params.key);
+    let key = req.params.key;
     const { value } = req.body;
     if (value) {
-      store
+      settings
         .updateSetting(key, value)
         .then(result => res.status(200).send(result))
         .catch(error => res.status(404).send({ error: error.message }));
@@ -45,6 +46,7 @@ router.post(
   "/settings",
   (req, res, next) => {
     const { key, value } = req.body;
+    console.log(req.body);
     if (key && value) {
       next();
     } else {
