@@ -1,14 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var settings = require('../server/models/Settings');
-
-/* GET api routes version 1*/
-router.get('/', function(req, res, next) {
-  res.send('General API node');
-});
+var settings = require('../../models/Settings');
 
 /* GET api routes regarding settings */
-router.get('/settings/:key', function(req, res, next) {
+router.get('/:key', function(req, res, next) {
   if (req.params.hasOwnProperty("key") && typeof(req.params.key) === 'string') {
     console.info("Request passed");
     next();
@@ -19,7 +14,7 @@ router.get('/settings/:key', function(req, res, next) {
 });
 
 /* Next on route '/settings/{key}' for get and put/update */
-router.route('/settings/:key')
+router.route('/:key')
   .get(function(req, res){
     settings
       .getSettingByKey(req.params.key)
@@ -43,7 +38,7 @@ router.route('/settings/:key')
 
 /* Route for creating a setting */
 router.post(
-  "/settings",
+  "/",
   (req, res, next) => {
     const { key, value } = req.body;
     console.log(req.body);
@@ -66,7 +61,7 @@ router.post(
 );
 
 /* Route for getting all settings */
-router.get("/settings", (req, res, next) => {
+router.get("/", (req, res, next) => {
   settings
     .getAllSettings()
     .then(settings => res.status(200).send(settings))
